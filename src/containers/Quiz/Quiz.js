@@ -93,6 +93,10 @@ class Quiz extends React.Component {
     })
   }
 
+  componentDidMount(){
+    
+  }
+
   isQuizFinished() {
     return this.state.activeQuestion + 1 === this.state.quiz.length;
   }
