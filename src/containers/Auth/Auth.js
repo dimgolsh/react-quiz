@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Button from "../../components/UI/Button/Button";
+import Input from "../../components/UI/Input/Input";
 import css from './Auth.module.scss';
 export default class Auth extends Component {
     loginHandler = () => {
@@ -19,8 +20,8 @@ export default class Auth extends Component {
       <div className={css.Auth}>
         <h2>Auth</h2>
         <form onSubmit={this.sumbitHandler} className={css.AuthForm}>
-          <input type="text" />
-          <input type="text" />
+          <Input label={'emeail'}  />
+          <Input label={'Password'}  />
           <Button type="success" onClic={this.loginHandler}>
             Enter
           </Button>
