@@ -15,11 +15,18 @@ import classes from './Layout.module.css';
             menu: !this.state.menu
         })
     }
+
+    toggleClose = () => {
+        this.setState({
+            menu: false
+        })
+    }
     render(){
         return (
             <div className={classes.Layout}>
                 <Drawer
                   isOpen = {this.state.menu}
+                  onClose = {this.toggleClose}
                 />
                 <MenuToggle
                 onToggle={this.toggleMenuHandler}
