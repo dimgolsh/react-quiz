@@ -6,37 +6,31 @@ import Select from "../../components/UI/Select/Select";
 import { createControl, validate, validateForm} from "../../form/formFramework";
 import Auxiliry from "../../hoc/Auxiliry/Auxiliry";
 function createOptionControl(number) {
-  return createControl(
-    {
-      label: `num ${number}`,
-      errorMessage: "dddfdf",
-      id: number,
-    },
-    { required: true }
-  );
-}
+    return createControl({
+      label: `Вариант ${number}`,
+      errorMessage: 'Значение не может быть пустым',
+      id: number
+    }, {required: true})
+  }
 
-function createFormControls() {
-  return {
-    question: createControl(
-      {
-        label: "Введите вопрос",
-        errorMessage: "ddddd",
-      },
-      {
-        required: true,
-      }
-    ),
+  function createFormControls() {
+    return {
+      question: createControl({
+        label: 'Введите вопрос',
+        errorMessage: 'Вопрос не может быть пустым'
+      }, {required: true}),
+      option1: createOptionControl(1),
+      option2: createOptionControl(2),
+      option3: createOptionControl(3),
+      option4: createOptionControl(4)
+    }
+  }
 
-    option1: createOptionControl(1),
-    option2: createOptionControl(2),
-    option3: createOptionControl(3),
-    option4: createOptionControl(4),
-  };
-}
 export default class QuizCreator extends Component {
   state = {
     quiz: [],
+    isFormValid: false,
+    rightAnswerId: 1,
     formControls: createFormControls(),
   };
 
@@ -49,7 +43,7 @@ export default class QuizCreator extends Component {
   submitHandler = event =>{
     event.preventDefault();
   }
-  
+
   addQuestionHandler = event => {
     event.preventDefault();
   }
@@ -59,9 +53,14 @@ export default class QuizCreator extends Component {
 
       control.touched = true
       control.value = value
-      control.valid = validate(control.vaule, control.validation)
+      control.valid = validate(control.value, control.validation)
 
+      formControls[controlName] = control
 
+      this.setState({
+        formControls,
+        isFormValid: validateForm(formControls)
+      })
   }
   renderControls() {
     return Object.keys(this.state.formControls).map((controlName, index) => {
