@@ -9,7 +9,7 @@ import {
   validateForm,
 } from "../../form/formFramework";
 import Auxiliry from "../../hoc/Auxiliry/Auxiliry";
-import axios from "axios";
+import axios from '../../axios/axios-quiz';
 
 function createOptionControl(number) {
   return createControl(
@@ -60,7 +60,7 @@ export default class QuizCreator extends Component {
     event.preventDefault();
     try {
       const res = await axios.post(
-        "https://react-quiz-86ed9.firebaseio.com/quizes.json",
+        "/quizes.json",
         this.state.quiz
       );
       this.setState({

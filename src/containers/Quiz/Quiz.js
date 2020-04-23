@@ -2,7 +2,8 @@ import React from "react";
 import classes from "./Quiz.module.scss";
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
-
+import axios from "../../axios/axios-quiz";
+import Loader from "../../components/UI/Loader/Loader";
 
 class Quiz extends React.Component {
   state = {
@@ -10,34 +11,8 @@ class Quiz extends React.Component {
     activeQuestion: 0,
     isFinished: false,
     answerState: null,
-    quiz: [
-      {
-        question: "Какого цвета небо",
-        rightAnswerId: 2,
-        id: 1,
-        answers: [
-          { text: "Вопрос 1", id: 1 },
-          { text: "Вопрос 1", id: 2 },
-          { text: "Вопрос 1", id: 3 },
-          { text: "Вопрос 1", id: 4 },
-          { text: "Вопрос 1", id: 5 },
-          { text: "Вопрос 1", id: 6 },
-        ],
-      },
-      {
-        question: "Какого цвета трава",
-        rightAnswerId: 2,
-        id: 2,
-        answers: [
-          { text: "Зеленый", id: 1 },
-          { text: "Вопрос 1", id: 2 },
-          { text: "Вопрос 1", id: 3 },
-          { text: "Вопрос 1", id: 4 },
-          { text: "Вопрос 1", id: 5 },
-          { text: "Вопрос 1", id: 6 },
-        ],
-      },
-    ],
+    quiz: [],
+    loading: true,
   };
 
   onAnswerClickHandler = (answerId) => {
@@ -54,13 +29,12 @@ class Quiz extends React.Component {
     const results = this.state.results;
 
     if (question.rightAnswerId === answerId) {
-
-      if(!results[question.id]) {
-        results[question.id]='success'
+      if (!results[question.id]) {
+        results[question.id] = "success";
       }
       this.setState({
         answerState: { [answerId]: "success" },
-        results
+        results,
       });
       const timeout = window.setTimeout(() => {
         if (this.isQuizFinished()) {
@@ -76,25 +50,32 @@ class Quiz extends React.Component {
         window.clearInterval(timeout);
       }, 1000);
     } else {
-      results[question.id] = 'error';
+      results[question.id] = "error";
       this.setState({
         answerState: { [answerId]: "error" },
-        results: results
+        results: results,
       });
     }
   };
 
   retryHandler = () => {
     this.setState({
-      activeQuestion:0,
+      activeQuestion: 0,
       answerState: null,
       isFinished: false,
-      results: []
-    })
-  }
+      results: [],
+    });
+  };
 
-  componentDidMount(){
-    
+  async componentDidMount() {
+    try {
+      const res = await axios.get(`/quizes/${this.props.match.params.id}.json`);
+      const quiz = res.data;
+      console.log(res);
+      this.setState({ quiz, loading: false });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   isQuizFinished() {
@@ -106,12 +87,14 @@ class Quiz extends React.Component {
       <div className={classes.Quiz}>
         <div className={classes.QuizWrapper}>
           <h1>Ответье на все вопросы</h1>
-          {this.state.isFinished ? (
-           <FinishedQuiz
-           results = {this.state.results}
-           quiz={this.state.quiz}
-           onRetry={this.retryHandler}
-           />
+          {this.state.loading ? (
+            <Loader />
+          ) : this.state.isFinished ? (
+            <FinishedQuiz
+              results={this.state.results}
+              quiz={this.state.quiz}
+              onRetry={this.retryHandler}
+            />
           ) : (
             <ActiveQuiz
               answers={this.state.quiz[this.state.activeQuestion].answers}
@@ -122,6 +105,8 @@ class Quiz extends React.Component {
               state={this.state.answerState}
             />
           )}
+
+          {}
         </div>
       </div>
     );
