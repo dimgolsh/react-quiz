@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import css from './QuizList.module.scss';
 import axios from 'axios';
+import Loader from '../../components/UI/Loader/Loader'
 export default class QuizList extends Component {
 
     state = {
-        quizes: []
+        quizes: [],
+        loading:true
     }
 renderQuizes(){
     return this.state.quizes.map((quiz,index)=>{
@@ -30,7 +32,7 @@ async componentDidMount(){
                name: `Test ${index+1}`
            })
        })
-        this.setState({quizes})
+        this.setState({quizes, loading:false})
     } catch (error) {
         
     }
@@ -40,6 +42,8 @@ async componentDidMount(){
     render() {
         return (
             <div className={css.QuizList}>
+                {this.state.loading ?   <Loader/> : null }
+              
                 {this.renderQuizes()}
             </div>
         )
