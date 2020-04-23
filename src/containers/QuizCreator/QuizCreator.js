@@ -9,6 +9,8 @@ import {
   validateForm,
 } from "../../form/formFramework";
 import Auxiliry from "../../hoc/Auxiliry/Auxiliry";
+import axios from "axios";
+
 function createOptionControl(number) {
   return createControl(
     {
@@ -54,10 +56,22 @@ export default class QuizCreator extends Component {
     event.preventDefault();
   };
 
-  createQuizHandler = event => {
-      event.preventDefault();
-      console.log(this.state.quiz)
-  }
+  createQuizHandler = async (event) => {
+    event.preventDefault();
+    try {
+      const res = await axios.post(
+        "https://react-quiz-86ed9.firebaseio.com/quizes.json",
+        this.state.quiz
+      );
+      this.setState({
+        quiz: [],
+        isFormValid: false,
+        rightAnswerId: 1,
+        formControls: createFormControls(),
+      });
+    } catch (error) {}
+ 
+  };
   addQuestionHandler = (event) => {
     event.preventDefault();
     const quiz = this.state.quiz.concat();
@@ -76,21 +90,21 @@ export default class QuizCreator extends Component {
       id: index,
       rightAnswerId: this.state.rightAnswerId,
       answers: [
-        {text: option1.value, id: option1.id },
-        {text: option2.value, id: option2.id },
-        {text: option3.value, id: option3.id },
-        {text: option4.value, id: option4.id },
+        { text: option1.value, id: option1.id },
+        { text: option2.value, id: option2.id },
+        { text: option3.value, id: option3.id },
+        { text: option4.value, id: option4.id },
       ],
     };
 
     quiz.push(questionItem);
 
     this.setState({
-        quiz,
-        isFormValid: false,
-        rightAnswerId: 1,
-        formControls: createFormControls(),
-    })
+      quiz,
+      isFormValid: false,
+      rightAnswerId: 1,
+      formControls: createFormControls(),
+    });
   };
   changeHandler = (value, controlName) => {
     const formControls = { ...this.state.formControls };
