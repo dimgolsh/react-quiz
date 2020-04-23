@@ -4,22 +4,37 @@ import css from './QuizList.module.scss';
 import axios from 'axios';
 export default class QuizList extends Component {
 
+    state = {
+        quizes: []
+    }
 renderQuizes(){
-    return [1,2,3].map((quiz,index)=>{
+    return this.state.quizes.map((quiz,index)=>{
         return (
-            <li key={index}
+            <li key={quiz.id}
             >
-                <NavLink to={'/quiz/' + quiz}>
-                    test {quiz}
+                <NavLink to={'/quiz/' + quiz.id}>
+                    test {quiz.name}
                 </NavLink>
             </li>
         )
     })
 }
 
-componentDidMount(){
-    axios.get('https://react-quiz-86ed9.firebaseio.com/quiz.json')
-    .then(res => console.log(res))
+async componentDidMount(){
+    try {
+        const res = await axios.get('https://react-quiz-86ed9.firebaseio.com/quizes.json')
+       const quizes = [];
+       Object.keys(res.data).forEach((key,index)=>{
+           quizes.push({
+               id:key,
+               name: `Test ${index+1}`
+           })
+       })
+        this.setState({quizes})
+    } catch (error) {
+        
+    }
+
 }
 
     render() {
