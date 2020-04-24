@@ -47,4 +47,4 @@ function mapStateToProps(state){
         isAuthenticated: !!state.auth.token
     }
 }
- export default connect()(Layout);
+ export default connect(mapStateToProps)(Layout);
