@@ -59,7 +59,7 @@ export default class QuizCreator extends Component {
   createQuizHandler = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post(
+      await axios.post(
         "/quizes.json",
         this.state.quiz
       );
@@ -78,7 +78,7 @@ export default class QuizCreator extends Component {
     const index = quiz.length + 1;
 
     const {
-      question,
+   //   question,
       option1,
       option2,
       option3,
@@ -177,7 +177,7 @@ export default class QuizCreator extends Component {
             <Button
               type="success"
               onClick={this.createQuizHandler}
-              disabled={this.state.quiz.length == 0}
+              disabled={this.state.quiz.length === 0}
             >
               Create test
             </Button>

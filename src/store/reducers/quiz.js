@@ -35,7 +35,6 @@ export default function quizReducer(state = initialState, action) {
       };
 
     case FETCH_QUIZ_SUCCESS:
-      console.log("action.quiz", action.quiz);
       return {
         ...state,
         loading: false,

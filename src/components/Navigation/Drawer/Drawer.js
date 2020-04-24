@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import css from "./Drawer.module.scss";
 import Backdrop from "../../UI/Backdrop/Backdrop";
 

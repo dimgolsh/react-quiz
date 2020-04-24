@@ -43,7 +43,7 @@ class Quiz extends React.Component {
             />
           )}
 
-          {}
+      
         </div>
       </div>
     );
