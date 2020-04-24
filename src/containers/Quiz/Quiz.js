@@ -4,6 +4,7 @@ import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
 import axios from "../../axios/axios-quiz";
 import Loader from "../../components/UI/Loader/Loader";
+import { connect } from "react-redux";
 
 class Quiz extends React.Component {
   state = {
@@ -112,4 +113,6 @@ class Quiz extends React.Component {
     );
   }
 }
-export default Quiz;
+
+
+export default connect()(Quiz);
