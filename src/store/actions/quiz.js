@@ -4,6 +4,9 @@ import {
   FETCH_QUIZES_SUCCESS,
   FETCH_QUIZES_ERROR,
   FETCH_QUIZ_SUCCESS,
+  FINISH_QUIZ,
+  QUIZ_NEXT_QUESTION,
+  QUIZ_RETRY
 } from "./actionsTypes";
 
 
@@ -65,4 +68,78 @@ export function fetchQuizSuccess(quiz) {
     type: FETCH_QUIZ_SUCCESS,
     quiz,
   };
+}
+
+export function quizSetState(answerState, results){
+    return {
+        type: '',
+        results
+    }
+}
+
+
+export function finishQuiz(){
+    return {
+        type: FINISH_QUIZ
+    }
+}
+
+export function quizNextQuestion(){
+    return {
+        type: QUIZ_NEXT_QUESTION
+    }
+}
+
+
+function isQuizFinished(state){
+
+    return state.activeQuestion + 1 === state.quiz.length
+}
+
+
+export function retryQuiz(){
+    return {
+        type: QUIZ_RETRY
+    }
+}
+export function quizAnswerClick(answerId){
+    return (dispatch,getState) => {
+
+        const state = getState().quiz;
+
+        if (state.answerState) {
+            const key = Object.keys(state.answerState)[0];
+            if (state.answerState[key] === "success") {
+              return;
+            }
+          }
+      
+          console.log(answerId);
+      
+          const question = state.quiz[state.activeQuestion];
+          const results = state.results;
+      
+          if (question.rightAnswerId === answerId) {
+            if (!results[question.id]) {
+              results[question.id] = "success";
+            }
+
+            dispatch(quizSetState({ [answerId]: "success" },results))
+           
+            const timeout = window.setTimeout(() => {
+              if (isQuizFinished()) {
+                  dispatch(finishQuiz())
+        
+              } else {
+
+                dispatch(quizNextQuestion())
+              }
+              window.clearInterval(timeout);
+            }, 1000);
+          } else {
+            results[question.id] = "error";
+
+            dispatch(quizSetState({ [answerId]: "error" },results))
+          }
+    }
 }
